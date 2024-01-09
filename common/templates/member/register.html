@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block title %}
+    YHWH-Login
+{% endblock title %}
+{% block head %}
+{% endblock head %}
+{% block content %}
+    {% load static %}
+    <div class="container-fluid d-flex justify-content-center h-100 d-inline-block">
+        <div class="card p-4 m-3 border shadow border-dark" style="width: 30%;">
+            <div class="card text-center">
+                <div class="card-head my-4 text-center font-italic">
+                    <h2>Create an Account</h2>
+                </div>
+                <div class="card-body">
+                    <form class="form-horizontal" method="post" action="#">
+                        {% csrf_token %}
+                        {{ form.non_field_errors }}
+                        {% for field in form %}
+                            <div class="form-group">
+                                {{ field.label_tag }}
+                                <br>
+                                {{ field }}
+                                {{ field.errors }}
+                            </div>
+                        {% endfor %}
+                        <div class="form-group mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg btn-block login-button">SignUp</button>
+                        </div>
+                    </form>
+                    <div class="login-register text-right">
+                        Already have an account?<a href="{% url 'login' %}">Login Here</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

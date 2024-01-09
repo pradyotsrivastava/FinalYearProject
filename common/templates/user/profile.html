@@ -1,0 +1,63 @@
+{% extends 'user/base-page.html' %}
+{% block head %}
+{% endblock head %}
+{% block title %}
+    Dashboard
+{% endblock title %}
+{% block navbar %}
+    {% include 'user/navbar.html' %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-warning alert-dismissible show" role="alert">
+                {{ message }}
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert"
+                        aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endblock navbar %}
+{% block content %}
+    <div class="container-fluid py-3" style="height:100vh;">
+        <div class="row">
+            <div class="col-sm-3">
+                <div class="card">
+                    <div class="card-body">
+                      <img src="{{ user.profile_image.url }}" class="card-img rounded-circle" alt="{{ user.name }}" style="height:250px;">
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-9">
+                <div class="card p-3">
+                    <h4 class="card-head px-3">
+                      My Profile
+                    </h4>
+                    <hr>
+                    <div class="card-body">
+                        <form class="form-horizontal"
+                              method="post"
+                              action="{% url 'profile' %}"
+                              enctype='multipart/form-data'>
+                            {% csrf_token %}
+                            {% for field in form %}
+                                <div class="form-group">
+                                    {{ field.label_tag }}
+                                    <br>
+                                    {{ field }}
+                                </div>
+                            {% endfor %}
+                            <div class="form-group mt-4">
+                                <button type="submit" class="btn btn-primary btn-lg btn-block login-button">Update Details</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+{% endblock content %}
+{% block footer %}
+    {% include 'user/footer.html' %}
+{% endblock footer %}

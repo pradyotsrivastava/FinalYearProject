@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% block title %}
+    Hospital-Registration
+{% endblock title %}
+{% block head %}
+{% endblock head %}
+{% block content %}
+    {% load static %}
+    <div class="container-fluid h-100 d-inline-block">
+        <div class="card p-4 m-3 border shadow border-dark">
+            <div class="card text-center">
+                <div class="card-head my-4 text-center font-italic">
+                    <h2>Hospital Registration</h2>
+                </div>
+                <div class="card-body">
+                    
+                    <form class="form-horizontal" method="post" action="{% url 'hospital-register' %}" enctype='multipart/form-data'>
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="card">
+                                    <div class="card-head my-4">
+                                        <h2>Hospital Details</h2>
+                                    </div>
+                                    {{ form_hospital.non_field_errors }}
+
+                                    <div class="card-body text-left">
+                                        {% for field in form_hospital %}
+                                            <div class="form-group">
+                                                {{ field.label_tag }}
+                                                <br>
+                                                {{ field }}
+                                                {{ field.errors }}
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="card">
+                                    <div class="card-head my-4">
+                                        <h2>Admin/Owner Details</h2>
+                                    </div>
+                                    {{ form_admin.non_field_errors }}
+                                    <div class="card-body text-left">
+                                        {% for field1 in form_admin %}
+                                            <div class="form-group">
+                                                {{ field1.label_tag }}
+                                                <br>
+                                                {{ field1 }}
+                                                {{ field1.errors }}
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="form-group mt-4">
+                                    <button type="submit" class="btn btn-success btn-lg">Submit</button>
+                                </div>
+                            </form>
+                            <div class="login-register text-right">
+                                Already registered hospital?<a href="{% url 'hospital-login' %}">Login Here</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

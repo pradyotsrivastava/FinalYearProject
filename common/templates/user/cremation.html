@@ -1,0 +1,119 @@
+{% extends 'user/base-page.html' %}
+{% block head %}
+{% endblock head %}
+{% block title %}
+    Cremation
+{% endblock title %}
+{% block navbar %}
+    {% include 'user/navbar.html' %}
+{% endblock navbar %}
+{% block content %}
+    <div class="container-fluid py-3" style="height:100vh;">
+        <div>
+            <h3>Need Help for Cremation Rituals</h3>
+            <hr>
+            <div class="float-right">
+                <div class="col-sm">
+                    <button type="button"
+                            class="btn btn-secondary btn-block"
+                            data-toggle="modal"
+                            data-target="#cremation">
+                        Apply
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="mt-3">
+                <table class="table mt-2 table-striped">
+                    <thead class="bg-dark text-light">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Religion</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Age </th>
+                            <th scope="col">Gender </th>
+                            <th scope="col">Address </th>
+                            <th scope="col">Demise Date </th>
+                            <th scope="col">Demise time</th>
+                            <th scope="col">Demise  City</th>
+                            <th scope="col">Priest</th>
+                            <th scope="col">Vehicle</th>
+                            <th scope="col">Amount</th>
+                            <th scope="col">Paid</th>
+                            <th scope="col">Done</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for val in cremation %}
+                            <tr>
+                                <th scope="row">{{ forloop.counter }}</th>
+                                <td>{{ val.religion }}</td>
+                                <td>{{ val.name }}</td>
+                                   <td>{{ val.age }}</td>
+                                <td>{{ val.gender }}</td>
+                                <td>{{ val.address }}</td>
+                                <td>{{ val.demise_date }}</td>
+                                <td>{{ val.demise_time }}</td>
+                                <td>{{ val.demise_city }}</td>
+                                <td>{{ val.is_priest }}</td>
+                                <td>{{ val.is_vehicle }}</td>
+                                <td>{{ val.amount }}</td>
+                                <td>{{ val.is_paid}}</td>
+                                <td>{{ val.done }}</td>
+
+
+
+
+
+                               
+                                
+
+                                
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Doctor feedback -->
+    <div class="modal fade"
+         id="cremation"
+         tabindex="-1"
+         role="dialog"
+         aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Cremation Form </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body text-center">
+                    {{ form.non_field_errors }}
+                    <form class="form-horizontal" method="post" action="{% url 'cremation' %}">
+                        {% csrf_token %}
+                        {% for field in form %}
+                            <div class="form-group">
+                                {{ field.label_tag }}
+                                <br>
+                                {{ field }}
+                                {{ field.errors }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit"  class="btn btn-success">Confirm</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+{% block footer %}
+    {% include 'user/footer.html' %}
+{% endblock footer %}

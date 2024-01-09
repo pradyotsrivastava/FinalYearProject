@@ -1,0 +1,301 @@
+{% extends 'base.html' %}
+{% block title %}
+    YHWH-Search
+{% endblock title %}
+{% block head %}
+{% endblock head %}
+{% block content %}
+    <div class="container-fluid p-4">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="comtainer bg-light p-2 border border-dark rounded">
+                    <center>
+                        <h4>Filter Records</h4>
+                    </center>
+                    <hr>
+                    <form action="." method="GET">
+                        <div>
+                            <h6>Search Data For:</h6>
+                            <div class="form-check">
+                                <input class="form-check-input"
+                                       onchange="listenToRadio(this.value)"
+                                       type="radio"
+                                       name="search_for"
+                                       value="doctors"
+                                       id="doctors"
+                                       required>
+                                <label class="form-check-label" for="doctors">Doctors</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input"
+                                       onchange="listenToRadio(this.value)"
+                                       type="radio"
+                                       name="search_for"
+                                       value="hospitals"
+                                       id="hospitals"
+                                       required>
+                                <label class="form-check-label" for="hospitals">Hospitals</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input"
+                                       onchange="listenToRadio(this.value)"
+                                       type="radio"
+                                       name="search_for"
+                                       value="ngo"
+                                       id="ngo"
+                                       required>
+                                <label class="form-check-label" for="ngos">Ngo's</label>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="form-group">
+                            <label for="name">Search Name</label>
+                            <input type="search"
+                                   class="form-control"
+                                   id="search"
+                                   placeholder="Example: Jeevan Jyoti Hospital"
+                                   name="search">
+                        </div>
+                        <hr>
+                        <div>
+                            <h6>Location:</h6>
+                            <div class="form-group">
+                                <label for="location-state">State</label>
+                                <select class='form-control'
+                                        id='locationState'
+                                        name="state"
+                                        onchange="stateChanged(this.value)">
+                                    <option selected disabled>
+                                        Select a value
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="location-city">City</label>
+                                <select class="form-control" id="locationCity" name="city">
+                                    <option selected disabled>
+                                        Select a value
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="form-group">
+                            <label for="category">Category</label>
+                            <select class="form-control" id="category" name="category">
+                                <option selected disabled>
+                                    Select a value
+                                </option>
+                            </select>
+                        </div>
+                        <hr>
+                        <h6>Hospital Advance Filters:</h6>
+                        <div class="row text-center mx-2">
+                            <div class="form-check col">
+                                <input type="checkbox" class="form-check-input" id="beds" name="beds" value="true" disabled>
+                                <label class="form-check-label" for="beds">Beds Availability</label>
+                              </div>
+                              <div class="form-check col">
+                                <input type="checkbox" class="form-check-input" id="oxygen" name="oxygen" value="true" disabled>
+                                <label class="form-check-label" for="oxygen">Oxygen Availability</label>
+                              </div>
+                              <div class="form-check col">
+                                <input type="checkbox" class="form-check-input" id="poison" name="poison" value="true" disabled>
+                                <label class="form-check-label" for="poison">Poison Cell</label>
+                              </div>
+                        </div>
+                        <hr>
+                        <button class="btn btn-outline-success my-2" type="submit">Apply Filters</button>
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-9">
+                {% if search %}<h3>Search Results For: "{{ search }}"</h3>{% endif %}
+                <hr>
+                {% if doctors %}
+                    <div class="container">
+                        <h5>All Doctors:</h5>
+                        <hr>
+                        <div class="row">
+                            {% for doctor in doctors %}
+                                <div class="card m-2" style="width: 18rem;">
+                                    <img class="card-img-top"
+                                         src="{{ doctor.image.url }}"
+                                         alt="Card image cap"
+                                         style="width: 100%;
+                                                object-fit: cover;">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ doctor.name }} ({{ doctor.specialization.name }})</h5>
+                                        <p class="card-text">
+                                            {{ doctor.degree }}
+                                        </p>
+                                        <p class="card-text">
+                                            <b><u>Hospital:</u></b> {{ doctor.hospital.name }}
+                                    </p>
+                                    <p class="card-text">
+                                        <b><u>Hospital Address:</u></b>
+                                        <br>
+                                        {{ doctor.hospital.address }},{{ doctor.hospital.city.name }},{{ doctor.hospital.city.state.name }}. Pincode-{{ doctor.hospital.pin }}
+                                    </p>
+                                </div>
+                                <div class="card-footer">
+                                    <small class="text-muted">Email: {{ doctor.email }}</small>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+            {% if hospitals %}
+                <div class="container">
+                    <h5>All Hospitals:</h5>
+                    <hr>
+                    <div class="row">
+                        {% for hospital in hospitals %}
+                            <div class="card m-2" style="width: 18rem;">
+                                <img class="card-img-top"
+                                     src="{{ hospital.image.url }}"
+                                     alt="Card image cap"
+                                     style="width: 100%;
+                                            object-fit: cover;">
+                                <div class="card-body">
+                                    <h4 class="card-title">{{ hospital.name }}</h4>
+                                    <p class="card-text">
+                                        <u>Poison Cell:</u>
+                                        {% if hospital.hospitalinfo.poison_cell %}
+                                            Yes
+                                        {% else %}
+                                            No
+                                        {% endif %}
+                                        <br>
+                                        <u>Oxygen Availability:</u>
+                                        {% if hospital.hospitalinfo.oxygen %}
+                                            Yes
+                                        {% else %}
+                                            No
+                                        {% endif %}
+                                    </p>
+                                    <small><b><u>Address:</u></b>
+                                    <br>
+                                {{ hospital.address }},{{ hospital.city.name }},{{ hospital.city.state.name }}. Pincode-{{ hospital.pin }}</small>
+                            </div>
+                            <div class="card-footer">
+                                <small class="text-muted"><a href="#">Know More</a></small>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+        {% if ngos %}
+            <div class="container">
+                <h5>All NGOs:</h5>
+                <hr>
+                <div class="row">
+                    {% for ngo in ngos %}
+                        <div class="card m-2" style="width: 18rem;">
+                            <img class="card-img-top"
+                                 src="{{ ngo.image.url }}"
+                                 alt="Card image cap"
+                                 style="width: 100%;
+                                        object-fit: cover;">
+                            <div class="card-body">
+                                <h4 class="card-title">{{ ngo.name }}</h4>
+                                <p class="card-text">
+                                    <u>Purpose:</u>{{ ngo.purpose }}
+                            </p>
+                            <small><b><u>Address:</u></b>
+                            <br>
+                        {{ ngo.address }},{{ ngo.city.name }},{{ ngo.city.state.name }}.</small>
+                    </div>
+                    <div class="card-footer">
+                        <small class="text-muted"><a href="#">Know More</a></small>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endif %}
+</div>
+</div>
+</div>
+<script type="text/javascript">
+  var urlString = window.location.href;
+  let paramString = urlString.split('?')[1];
+ try{
+  var tmp=JSON.parse('{"' + decodeURI(urlString.split('?')[1]).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}');
+  document.querySelector('input[name="search_for"][value='+tmp['search_for']+']').checked = true;
+listenToRadio(tmp['search_for']);
+ }catch(e){
+  console.log("No parameters found");
+ }
+
+ try{
+  var tmp=JSON.parse('{"' + decodeURI(urlString.split('?')[1]).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}');
+  var searchValue=tmp['search'].replace('+', ' ');
+  document.getElementById("search").value=searchValue;
+  
+listenToRadio(tmp['search_for']);
+ }catch(e){
+  console.log("No parameters found");
+ }
+
+  function listenToRadio(value){    
+    if(value==='ngo'){
+      var ngoCategory={{ category_ngo|safe }};
+            document.getElementById("beds").disabled = true;
+            document.getElementById("poison").disabled = true;
+            document.getElementById("oxygen").disabled = true;      
+    }
+    else{
+        if(value=="hospitals"){
+            document.getElementById("beds").disabled = false;
+            document.getElementById("poison").disabled = false;
+            document.getElementById("oxygen").disabled = false;
+        }else{
+            document.getElementById("beds").disabled = true;
+            document.getElementById("poison").disabled = true;
+            document.getElementById("oxygen").disabled = true; 
+        }
+      var ngoCategory={{ category_sp|safe }};
+    }
+    document.getElementById("category").innerHTML = "";
+    var opt = document.createElement("option");
+       opt.disabled = true;
+       opt.selected = true;
+       opt.value="Select a Category";
+       category.appendChild(opt);
+
+    for(element in ngoCategory)
+    {
+       var opt = document.createElement("option");
+       opt.value = ngoCategory[element];
+       opt.innerHTML = ngoCategory[element];
+       category.appendChild(opt);
+    }
+  }
+
+  var stateCity={{ stateCity|safe }}
+  var states={{ states|safe }}
+
+  for(element in states)
+    {
+       var ele = document.createElement("option");
+       ele.value = states[element];
+       ele.innerHTML = states[element];
+       locationState.appendChild(ele);       
+    }
+
+ function stateChanged(value){  
+  document.getElementById("locationCity").innerHTML = "";
+  for(element in stateCity[value])
+  {
+     var ele = document.createElement("option");
+     ele.value = stateCity[value][element];
+     ele.innerHTML = stateCity[value][element];
+     locationCity.appendChild(ele);    
+  }
+ }
+
+</script>
+{% endblock content %}

@@ -1,0 +1,231 @@
+{% extends 'user/base-page.html' %}
+{% block head %}
+{% endblock head %}
+{% block title %}
+    Dashboard
+{% endblock title %}
+{% block navbar %}
+    {% include 'user/navbar.html' %}
+{% endblock navbar %}
+{% block content %}
+    <div class="container-fluid p-4">
+        <div class="row">
+            <div class="card text-white m-1 col border border-success"
+                 style="background-color:#DCEDC8">
+                <div class="card-header bg-success rounded">
+                    <b>Total Requested Fundraise</b>
+                </div>
+                <div class="card-body ">
+                    <h3 class="card-title text-success text-right">
+                        {{ fundraise_stats }}
+                    </h5>
+                </div>
+            </div>
+            <div class="card text-white m-1 col border border-success"
+                 style="background-color:#DCEDC8">
+                <div class="card-header bg-success rounded">
+                    <b>Total Requested Cremations</b>
+                </div>
+                <div class="card-body ">
+                    <h3 class="card-title text-success text-right">
+                        {{ cremation_stats }}
+                    </h5>
+                </div>
+            </div>
+            <div class="card text-white m-1 col border border-success"
+                 style="background-color:#DCEDC8">
+                <div class="card-header bg-success rounded">
+                    <b>Total Feedback Given</b>
+                </div>
+                <div class="card-body ">
+                    <h3 class="card-title text-success text-right">
+                        {{ feedback_stats }}
+                    </h5>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <center>
+            <h3>Search Nearby</h3>
+        </center>
+        <div class="comtainer bg-light p-3 border border-dark rounded">
+            <form action="{% url 'search' %}" method="GET">
+                <h5>
+                    <div class="row text-center">
+                        <div class="form-check col">
+                            <input class="form-check-input"
+                                   onchange="listenToRadio(this.value)"
+                                   type="radio"
+                                   name="search_for"
+                                   value="doctors"
+                                   id="doctors"
+                                   required>
+                            <label class="form-check-label" for="doctors">Doctors</label>
+                        </div>
+                        <div class="form-check col">
+                            <input class="form-check-input"
+                                   onchange="listenToRadio(this.value)"
+                                   type="radio"
+                                   name="search_for"
+                                   value="hospitals"
+                                   id="hospitals"
+                                   required>
+                            <label class="form-check-label" for="hospitals">Hospitals</label>
+                        </div>
+                        <div class="form-check col">
+                            <input class="form-check-input"
+                                   onchange="listenToRadio(this.value)"
+                                   type="radio"
+                                   name="search_for"
+                                   value="ngo"
+                                   id="ngo"
+                                   required>
+                            <label class="form-check-label" for="ngos">Ngo's</label>
+                        </div>
+                    </div>
+                </h5>
+                <hr>
+                <div class="form-group">
+                    <label for="name">Search Name</label>
+                    <input type="search"
+                           class="form-control"
+                           id="search"
+                           placeholder="Example: Jeevan Jyoti Hospital"
+                           name="search">
+                </div>
+                <hr>
+                <div>
+                    <h6>Location:</h6>
+                    <div class="form-group">
+                        <label for="location-state">State</label>
+                        <select class='form-control'
+                                id='locationState'
+                                name="state"
+                                onchange="stateChanged(this.value)">
+                            <option selected disabled>
+                                Select a value
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="location-city">City</label>
+                        <select class="form-control" id="locationCity" name="city">
+                            <option selected disabled>
+                                Select a value
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <hr>
+                <div class="form-group">
+                    <label for="category">Category</label>
+                    <select class="form-control" id="category" name="category">
+                        <option selected disabled>
+                            Select a value
+                        </option>
+                    </select>
+                </div>
+                <hr>
+                <h6>Hospital Advance Filters:</h6>
+                <div class="row text-center mx-2">
+                    <div class="form-check col">
+                        <input type="checkbox" class="form-check-input" id="beds" name="beds" value="true" disabled>
+                        <label class="form-check-label" for="beds">Beds Availability</label>
+                      </div>
+                      <div class="form-check col">
+                        <input type="checkbox" class="form-check-input" id="oxygen" name="oxygen" value="true" disabled>
+                        <label class="form-check-label" for="oxygen">Oxygen Availability</label>
+                      </div>
+                      <div class="form-check col">
+                        <input type="checkbox" class="form-check-input" id="poison" name="poison" value="true" disabled>
+                        <label class="form-check-label" for="poison">Poison Cell</label>
+                      </div>
+                </div>
+                <hr>
+                <button class="btn btn-outline-success my-2" type="submit">Apply Filters</button>
+            </form>
+        </div>
+    </div>
+    <script type="text/javascript">
+  var urlString = window.location.href;
+  let paramString = urlString.split('?')[1];
+ try{
+  var tmp=JSON.parse('{"' + decodeURI(urlString.split('?')[1]).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}');
+  document.querySelector('input[name="search_for"][value='+tmp['search_for']+']').checked = true;
+listenToRadio(tmp['search_for']);
+ }catch(e){
+  console.log("No parameters found");
+ }
+
+ try{
+  var tmp=JSON.parse('{"' + decodeURI(urlString.split('?')[1]).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}');
+  var searchValue=tmp['search'].replace('+', ' ');
+  document.getElementById("search").value=searchValue;
+  
+listenToRadio(tmp['search_for']);
+ }catch(e){
+  console.log("No parameters found");
+ }
+
+  function listenToRadio(value){    
+    if(value==='ngo'){
+        var ngoCategory={{ category_ngo|safe }};
+              document.getElementById("beds").disabled = true;
+              document.getElementById("poison").disabled = true;
+              document.getElementById("oxygen").disabled = true;      
+      }
+      else{
+          if(value=="hospitals"){
+              document.getElementById("beds").disabled = false;
+              document.getElementById("poison").disabled = false;
+              document.getElementById("oxygen").disabled = false;
+          }else{
+              document.getElementById("beds").disabled = true;
+              document.getElementById("poison").disabled = true;
+              document.getElementById("oxygen").disabled = true; 
+          }
+        var ngoCategory={{ category_sp|safe }};
+      }
+    document.getElementById("category").innerHTML = "";
+    var opt = document.createElement("option");
+       opt.disabled = true;
+       opt.selected = true;
+       opt.value="Select a Category";
+       category.appendChild(opt);
+
+    for(element in ngoCategory)
+    {
+       var opt = document.createElement("option");
+       opt.value = ngoCategory[element];
+       opt.innerHTML = ngoCategory[element];
+       category.appendChild(opt);
+    }
+  }
+
+  var stateCity={{ stateCity|safe }}
+  var states={{ states|safe }}
+
+  for(element in states)
+    {
+       var ele = document.createElement("option");
+       ele.value = states[element];
+       ele.innerHTML = states[element];
+       locationState.appendChild(ele);       
+    }
+
+ function stateChanged(value){  
+  document.getElementById("locationCity").innerHTML = "";
+  for(element in stateCity[value])
+  {
+     var ele = document.createElement("option");
+     ele.value = stateCity[value][element];
+     ele.innerHTML = stateCity[value][element];
+     locationCity.appendChild(ele);    
+  }
+ }
+
+    </script>
+{% endblock content %}
+{% block footer %}
+    {% include 'user/footer.html' %}
+{% endblock footer %}

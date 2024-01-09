@@ -1,0 +1,38 @@
+{% load static %}
+<a class="navbar-brand font-italic text-dark shadow rounded px-2"
+   href="{% url 'homepage' %}">
+    <img src="{% static 'home/images/Logo-YHWH.jpeg' %}"
+         width="30"
+         height="30"
+         class="rounded shadow"
+         alt="">
+    <b>You-Heal-We-Help</b>
+</a>
+<hr class="border border-success">
+<div>
+    <style>
+        a:hover {
+          background-color: lightgreen;
+        }
+    </style>
+    <a class="navbar-brand text-dark shadow rounded px-2 w-100"
+       href="{% url 'dashboard' %}">
+        <h4>Dashboard</h4>
+    </a>
+    <hr>
+    <a class="navbar-brand text-dark shadow rounded px-2 w-100"
+       href="{% url 'fundraise' %}">
+        <h4>Fundraise</h4>
+    </a>
+    <hr>
+    <a class="navbar-brand text-dark shadow rounded px-2 w-100"
+       href="{% url 'cremation' %}">
+        <h4>Cremation</h4>
+    </a>
+    <hr>
+    <a class="navbar-brand text-dark shadow rounded px-2 w-100"
+       href="{% url 'feedback' %}">
+        <h4>Feedback</h4>
+    </a>
+    <hr>
+</div>
